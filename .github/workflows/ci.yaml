@@ -7,7 +7,7 @@ on:
     branches: ["main"]
 
 env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true   # ✅ opt into Node 24
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   build:
@@ -23,11 +23,18 @@ jobs:
           node-version: '18'
           cache: 'npm'
 
+      # Install
       - name: Install dependencies
-        run: npm install   # or npm ci if lock file exists
+        run: npm install   # or npm ci if you have package-lock.json
 
+      # Test
       - name: Run tests
         run: npm test
 
+      # Build (app build)
       - name: Build project
         run: npm run build
+
+      # 🐳 Docker Build (runs only if above steps pass)
+      - name: Build Docker image
+        run: docker build -t my-node-app:latest .
