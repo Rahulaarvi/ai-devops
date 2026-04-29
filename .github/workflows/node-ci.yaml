@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Node.js CI/CD
 
 on:
   push:
@@ -10,21 +10,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [18.x, 20.x]
-
     steps:
-      # Checkout repository
-      - name: Checkout code
+      # Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       # Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          node-version: 20
+          cache: npm
 
       # Install dependencies
       - name: Install dependencies
