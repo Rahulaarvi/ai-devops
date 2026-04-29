@@ -6,35 +6,32 @@ on:
   pull_request:
     branches: ["main"]
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: '18'
           cache: 'npm'
 
       # Install
       - name: Install dependencies
-        run: npm install   # or npm ci if you have package-lock.json
+        run: npm install   # or npm ci if package-lock.json exists
 
       # Test
       - name: Run tests
         run: npm test
 
-      # Build (app build)
+      # Build
       - name: Build project
         run: npm run build
 
-      # 🐳 Docker Build (runs only if above steps pass)
+      # Docker Build
       - name: Build Docker image
         run: docker build -t my-node-app:latest .
