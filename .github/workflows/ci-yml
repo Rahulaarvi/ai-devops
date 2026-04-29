@@ -1,4 +1,4 @@
-name: Node.js CI/CD
+name: Node.js CI/CD Pipeline
 
 on:
   push:
@@ -10,23 +10,25 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Run tests
         run: npm test
-
-      - name: Build Docker image
-        run: docker build -t my-node-app .
 
       - name: Build application
         run: npm run build
