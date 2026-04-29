@@ -1,32 +1,39 @@
-name: Node.js CI/CD
+name: Node.js CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
     steps:
-      - name: Checkout repository
+      # Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Use Node.js
+      # Setup Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
 
+      # Install dependencies
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
+      # Run tests
       - name: Run tests
         run: npm test
 
-      - name: Build Docker image
-        run: docker build -t my-node-app .
-
-      - name: Build application
+      # Build application
+      - name: Build project
         run: npm run build
